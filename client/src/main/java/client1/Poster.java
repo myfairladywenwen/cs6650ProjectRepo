@@ -26,6 +26,7 @@ public class Poster implements Runnable{
         this.successCounter = successCounter;
         this.failCounter = failCounter;
     }
+
     public Poster(LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch endCountDown,
                   Barrier successCounter, Barrier failCounter){
         this.eventQueue = eventQueue;
