@@ -1,3 +1,5 @@
+package client1;
+
 import io.swagger.client.model.LiftRide;
 
 import java.security.NoSuchAlgorithmException;

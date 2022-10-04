@@ -1,3 +1,7 @@
+package client1;
+
+import client1.Barrier;
+import client1.MyLiftRide;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
 import io.swagger.client.ApiResponse;
@@ -13,7 +17,7 @@ public class Poster implements Runnable{
     private Barrier successCounter;
     private Barrier failCounter;
     public static String basePathLocal = "http://localhost:8080/newServer_war_exploded/skiers/12";
-    //    public static String basePathEC2 = "http://100.24.33.130:8080/newServer_war/skiers/12";
+//        public static String basePathEC2 = "http://35.167.243.15:8080/newServer_war/skiers/12";
     public Poster(LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch firstCountDown, CountDownLatch endCountDown,
                   Barrier successCounter, Barrier failCounter){
         this.eventQueue = eventQueue;
@@ -44,16 +48,15 @@ public class Poster implements Runnable{
             MyLiftRide curr = eventQueue.poll();
             try {
                 ApiResponse<Void> res = skiersApi.writeNewLiftRideWithHttpInfo(curr.getBody(), curr.getResortID(), curr.getSeasonID(), curr.getDayID(),curr.getSkierID());
-//                System.out.println(res.getStatusCode());
                 int j = 0;
                 while(j < 5 && res.getStatusCode() != 201){
                     res = skiersApi.writeNewLiftRideWithHttpInfo(curr.getBody(), curr.getResortID(), curr.getSeasonID(), curr.getDayID(),curr.getSkierID());
                     j++;
                 }
                 if(res.getStatusCode() == 201){
-                    if(firstCountDown != null) {
-                        firstCountDown.countDown();
-                    }
+//                    if(firstCountDown != null) {
+//                        firstCountDown.countDown();
+//                    }
                     endCountDown.countDown();
                     successCounter.inc();
                 }else{
@@ -63,6 +66,7 @@ public class Poster implements Runnable{
                 throw new RuntimeException(e);
             }
         }
+        firstCountDown.countDown();
     }
 
     public void sendPostRequestSingleThread(){

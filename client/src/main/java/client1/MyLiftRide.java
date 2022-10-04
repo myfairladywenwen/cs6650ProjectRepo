@@ -1,6 +1,7 @@
-import com.google.gson.annotations.SerializedName;
+package client1;
+
 import io.swagger.client.model.LiftRide;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Objects;
 
 public class MyLiftRide {
@@ -73,7 +74,7 @@ public class MyLiftRide {
 
     @Override
     public String toString() {
-        return "MyLiftRide{" +
+        return "client1.MyLiftRide{" +
                 "body=" + body +
                 ", resortID=" + resortID +
                 ", seasonID='" + seasonID + '\'' +

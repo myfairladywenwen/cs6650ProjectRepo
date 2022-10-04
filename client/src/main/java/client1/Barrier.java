@@ -1,3 +1,5 @@
+package client1;
+
 public class Barrier {
     private int count = 0;
 

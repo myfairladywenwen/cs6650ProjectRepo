@@ -1,3 +1,10 @@
+package client1;
+
+import client1.Barrier;
+import client1.Generator;
+import client1.MyLiftRide;
+import client1.Poster;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -19,6 +26,7 @@ public class SingleThreadClient {
         endCountDown.await();
         long end = System.currentTimeMillis();
         long time = end-start;
+        System.out.println("max threads count: 1");
         System.out.println("total success: " + successCounter.getVal());
         System.out.println("total failure: " + failCounter.getVal());
         System.out.println("total time used in millisecond: " + time);

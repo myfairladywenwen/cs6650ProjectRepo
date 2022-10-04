@@ -1,8 +1,13 @@
+package client1;
+
+import client1.Barrier;
+import client1.Generator;
+
 import java.util.concurrent.*;
 
 public class MultiThreadClient {
-    private static final int TOTAL_REQUEST = 200000;
-    private static final int MAX_THREADS = 168;
+    private static final int TOTAL_REQUEST = 64000;
+    private static final int MAX_THREADS = 32;
     public static void main(String[] arg) throws Exception {
         LinkedBlockingQueue<MyLiftRide> eventQueue = new LinkedBlockingQueue<>(TOTAL_REQUEST);
         Generator generator = new Generator(eventQueue);
@@ -13,7 +18,7 @@ public class MultiThreadClient {
         thread.start();
 
         ExecutorService producerPool = Executors.newFixedThreadPool(MAX_THREADS);
-        CountDownLatch firstCountDown = new CountDownLatch(1000);
+        CountDownLatch firstCountDown = new CountDownLatch(1);
         CountDownLatch endCountDown = new CountDownLatch(TOTAL_REQUEST);
         for (int i = 0; i < 32; i++)
         {
