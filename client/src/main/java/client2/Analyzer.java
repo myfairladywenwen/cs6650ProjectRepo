@@ -58,7 +58,7 @@ public class Analyzer {
         double mean = 0.0;
         for (Long aLong : array) mean += aLong;
         mean /= n;
-        double throughput =(double)(((this.numSuccess.get() + this.numNonSuccess.get()) / (this.endTime - this.startTime))  * 1000);
+        double throughput = (double)(this.numSuccess.get() + this.numNonSuccess.get()) / (this.endTime - this.startTime)  * 1000;
         long p99 = array.get((n-1) * 99 / 100);
         long min = array.get(0);
         long max = array.get(n-1);

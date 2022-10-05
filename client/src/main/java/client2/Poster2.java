@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Poster2 implements Runnable{
 
@@ -22,19 +21,17 @@ public class Poster2 implements Runnable{
     private CountDownLatch endCountDown;
     private Barrier successCounter;
     private Barrier failCounter;
-    private Logger errLogger;
-    public static String basePathLocal = "http://localhost:8080/newServer_war_exploded/skiers/12";
-    //        public static String basePathEC2 = "http://35.167.243.15:8080/newServer_war/skiers/12";
+//    public static String basePathLocal = "http://localhost:8080/newServer_war_exploded/skiers/12";
+    public static String basePathEC2 = "http://34.220.181.128:8080/newServer_war/skiers/12";
 
     public Poster2(MultiThreadClient2 client, LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch firstCountDown, CountDownLatch endCountDown,
-                  Barrier successCounter, Barrier failCounter, Logger errLogger){
+                  Barrier successCounter, Barrier failCounter){
         this.client = client;
         this.eventQueue = eventQueue;
         this.firstCountDown = firstCountDown;
         this.endCountDown = endCountDown;
         this.successCounter = successCounter;
         this.failCounter = failCounter;
-
     }
 
     @Override
@@ -47,8 +44,8 @@ public class Poster2 implements Runnable{
         StringBuilder threadLogWriter = new StringBuilder();
         int success = 0;
         ApiClient apiClient = new ApiClient();
-        apiClient.setBasePath(basePathLocal);
-//        apiClient.setBasePath(basePathEC2);
+//        apiClient.setBasePath(basePathLocal);
+        apiClient.setBasePath(basePathEC2);
         SkiersApi skiersApi = new SkiersApi(apiClient);
         for(int i = 0; i < 1000; i++){
             MyLiftRide curr = eventQueue.poll();
@@ -82,7 +79,6 @@ public class Poster2 implements Runnable{
         this.client.getAnalyzer().addTime(timeInThread);
         threadLogWriter.deleteCharAt(threadLogWriter.length()-1);
         this.client.getAnalyzer().addLog(threadLogWriter.toString());
-
     }
 
     private void addLog(StringBuilder builder, long startTime, String requestType, long latency, ApiResponse response) {

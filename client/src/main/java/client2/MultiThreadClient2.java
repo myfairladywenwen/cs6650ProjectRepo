@@ -4,7 +4,6 @@ import client1.Barrier;
 import client1.Generator;
 import client1.MyLiftRide;
 
-
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
@@ -15,8 +14,8 @@ public class MultiThreadClient2 {
     private Analyzer analyzer;
     Logger errLogger;
 
-    public MultiThreadClient2(Analyzer analyzer){
-        this.analyzer = analyzer;
+    public MultiThreadClient2(){
+        this.analyzer = new Analyzer();
         errLogger = Logger.getLogger(String.valueOf(MultiThreadClient2.class));
     }
 
@@ -39,13 +38,13 @@ public class MultiThreadClient2 {
         CountDownLatch endCountDown = new CountDownLatch(TOTAL_REQUEST);
         for (int i = 0; i < 32; i++)
         {
-            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, errLogger) ;
+            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter) ;
             producerPool.execute(poster);
         }
         firstCountDown.await();
 
         for(int i = 0; i < MAX_THREADS; i++){
-            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, errLogger) ;
+            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter) ;
             producerPool.execute(poster);
         }
 
@@ -64,5 +63,4 @@ public class MultiThreadClient2 {
     public void analyze() {
         this.analyzer.analyze();
     }
-
 }
