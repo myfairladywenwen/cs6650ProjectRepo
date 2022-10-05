@@ -21,17 +21,17 @@ public class Poster2 implements Runnable{
     private CountDownLatch endCountDown;
     private Counter successCounter;
     private Counter failCounter;
-//    public static String basePathLocal = "http://localhost:8080/newServer_war_exploded/skiers/12";
-    public static String basePathEC2 = "http://34.220.181.128:8080/newServer_war/skiers/12";
+    private String basePath;
 
     public Poster2(MultiThreadClient2 client, LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch firstCountDown, CountDownLatch endCountDown,
-                   Counter successCounter, Counter failCounter){
+                   Counter successCounter, Counter failCounter, String basePath){
         this.client = client;
         this.eventQueue = eventQueue;
         this.firstCountDown = firstCountDown;
         this.endCountDown = endCountDown;
         this.successCounter = successCounter;
         this.failCounter = failCounter;
+        this.basePath = basePath;
     }
 
     @Override
@@ -44,8 +44,7 @@ public class Poster2 implements Runnable{
         StringBuilder threadLogWriter = new StringBuilder();
         int success = 0;
         ApiClient apiClient = new ApiClient();
-//        apiClient.setBasePath(basePathLocal);
-        apiClient.setBasePath(basePathEC2);
+        apiClient.setBasePath(basePath);
         SkiersApi skiersApi = new SkiersApi(apiClient);
         for(int i = 0; i < 1000; i++){
             MyLiftRide curr = eventQueue.poll();

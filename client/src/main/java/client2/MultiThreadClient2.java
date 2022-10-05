@@ -8,15 +8,18 @@ import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 public class MultiThreadClient2 {
-
-    private static final int TOTAL_REQUEST = 200000;
-    private static final int MAX_THREADS = 168;
+    private String basePath;
+    private int totalRequest;
+    private int maxThreads;
     private Analyzer analyzer;
     Logger errLogger;
 
-    public MultiThreadClient2(){
+    public MultiThreadClient2(String basePath, int totalRequest, int maxThreads){
+        this.basePath = basePath;
+        this.totalRequest = totalRequest;
+        this.maxThreads = maxThreads;
         this.analyzer = new Analyzer();
-        errLogger = Logger.getLogger(String.valueOf(MultiThreadClient2.class));
+        this.errLogger = Logger.getLogger(String.valueOf(MultiThreadClient2.class));
     }
 
     public Analyzer getAnalyzer(){
@@ -24,7 +27,7 @@ public class MultiThreadClient2 {
     }
 
     public void open() throws Exception {
-        LinkedBlockingQueue<MyLiftRide> eventQueue = new LinkedBlockingQueue<>(TOTAL_REQUEST);
+        LinkedBlockingQueue<MyLiftRide> eventQueue = new LinkedBlockingQueue<>(totalRequest);
         Generator generator = new Generator(eventQueue);
         Counter successCounter = new Counter();
         Counter failCounter = new Counter();
@@ -33,18 +36,18 @@ public class MultiThreadClient2 {
         Thread thread = new Thread(generator);
         thread.start();
 
-        ExecutorService producerPool = Executors.newFixedThreadPool(MAX_THREADS);
+        ExecutorService producerPool = Executors.newFixedThreadPool(maxThreads);
         CountDownLatch firstCountDown = new CountDownLatch(1);
-        CountDownLatch endCountDown = new CountDownLatch(TOTAL_REQUEST);
+        CountDownLatch endCountDown = new CountDownLatch(totalRequest);
         for (int i = 0; i < 32; i++)
         {
-            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter) ;
+            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, basePath) ;
             producerPool.execute(poster);
         }
         firstCountDown.await();
 
-        for(int i = 0; i < MAX_THREADS; i++){
-            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter) ;
+        for(int i = 0; i < maxThreads; i++){
+            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, basePath) ;
             producerPool.execute(poster);
         }
 
@@ -54,7 +57,7 @@ public class MultiThreadClient2 {
 
         this.analyzer.stop();
 
-        System.out.println("max threads count: " + MAX_THREADS);
+        System.out.println("max threads count: " + maxThreads);
         System.out.println("total success: " + this.analyzer.numSuccess);
         System.out.println("total failure: " + this.analyzer.numNonSuccess);
         System.out.println("total time used in millisecond: " + (this.analyzer.endTime - this.analyzer.startTime));
