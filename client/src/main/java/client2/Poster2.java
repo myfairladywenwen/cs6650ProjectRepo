@@ -1,6 +1,6 @@
 package client2;
 
-import client1.Barrier;
+import client1.Counter;
 import client1.MyLiftRide;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
@@ -19,13 +19,13 @@ public class Poster2 implements Runnable{
     private LinkedBlockingQueue<MyLiftRide> eventQueue;
     private CountDownLatch firstCountDown;
     private CountDownLatch endCountDown;
-    private Barrier successCounter;
-    private Barrier failCounter;
+    private Counter successCounter;
+    private Counter failCounter;
 //    public static String basePathLocal = "http://localhost:8080/newServer_war_exploded/skiers/12";
     public static String basePathEC2 = "http://34.220.181.128:8080/newServer_war/skiers/12";
 
     public Poster2(MultiThreadClient2 client, LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch firstCountDown, CountDownLatch endCountDown,
-                  Barrier successCounter, Barrier failCounter){
+                   Counter successCounter, Counter failCounter){
         this.client = client;
         this.eventQueue = eventQueue;
         this.firstCountDown = firstCountDown;

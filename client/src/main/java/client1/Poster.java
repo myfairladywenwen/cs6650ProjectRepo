@@ -1,7 +1,5 @@
 package client1;
 
-import client1.Barrier;
-import client1.MyLiftRide;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiException;
 import io.swagger.client.ApiResponse;
@@ -14,12 +12,12 @@ public class Poster implements Runnable{
     private LinkedBlockingQueue<MyLiftRide> eventQueue;
     private CountDownLatch firstCountDown;
     private CountDownLatch endCountDown;
-    private Barrier successCounter;
-    private Barrier failCounter;
+    private Counter successCounter;
+    private Counter failCounter;
     public static String basePathLocal = "http://localhost:8080/newServer_war_exploded/skiers/12";
 //        public static String basePathEC2 = "http://35.167.243.15:8080/newServer_war/skiers/12";
     public Poster(LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch firstCountDown, CountDownLatch endCountDown,
-                  Barrier successCounter, Barrier failCounter){
+                  Counter successCounter, Counter failCounter){
         this.eventQueue = eventQueue;
         this.firstCountDown = firstCountDown;
         this.endCountDown = endCountDown;
@@ -28,7 +26,7 @@ public class Poster implements Runnable{
     }
 
     public Poster(LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch endCountDown,
-                  Barrier successCounter, Barrier failCounter){
+                  Counter successCounter, Counter failCounter){
         this.eventQueue = eventQueue;
         this.endCountDown = endCountDown;
         this.successCounter = successCounter;

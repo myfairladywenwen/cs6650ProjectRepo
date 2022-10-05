@@ -1,6 +1,6 @@
 package client2;
 
-import client1.Barrier;
+import client1.Counter;
 import client1.Generator;
 import client1.MyLiftRide;
 
@@ -26,8 +26,8 @@ public class MultiThreadClient2 {
     public void open() throws Exception {
         LinkedBlockingQueue<MyLiftRide> eventQueue = new LinkedBlockingQueue<>(TOTAL_REQUEST);
         Generator generator = new Generator(eventQueue);
-        Barrier successCounter = new Barrier();
-        Barrier failCounter = new Barrier();
+        Counter successCounter = new Counter();
+        Counter failCounter = new Counter();
         this.analyzer.start();
 
         Thread thread = new Thread(generator);

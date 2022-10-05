@@ -1,10 +1,5 @@
 package client1;
 
-import client1.Barrier;
-import client1.Generator;
-import client1.MyLiftRide;
-import client1.Poster;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -13,8 +8,8 @@ public class SingleThreadClient {
     public static void main(String[] arg) throws Exception {
         LinkedBlockingQueue<MyLiftRide> eventQueue = new LinkedBlockingQueue<>(TOTAL_REQUEST);
         Generator generator = new Generator(eventQueue);
-        Barrier successCounter = new Barrier();
-        Barrier failCounter = new Barrier();
+        Counter successCounter = new Counter();
+        Counter failCounter = new Counter();
         long start = System.currentTimeMillis();
         Thread thread = new Thread(generator);
         thread.start();
