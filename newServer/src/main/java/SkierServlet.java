@@ -42,12 +42,31 @@ public class SkierServlet extends HttpServlet {
         }
     }
 
-    // simple urlPath rule for now: numberic value after /skiers. eg:/skiers/1/...
+    /*
+    /skiers/{resortID}/seasons/{seasonID}/days/{dayID}/skiers/{skierID}
+            int32               2019            1-366           int32
+     */
+
     private boolean isUrlValid(String[] urlPath) {
-        // TODO: validate the request url path according to the API spec
+        String seasons = urlPath[2];
+        String days = urlPath[4];
+        String skiers2 = urlPath[6];
+        if(!seasons.equals("seasons") || !days.equals("days") || !skiers2.equals("skiers")){
+            return false;
+        }
+        int resortID;
+        int seasonID;
+        int dayID;
+        int skierID;
         try {
-            Integer.parseInt(urlPath[1]);
+            resortID = Integer.parseInt(urlPath[1]);
+            seasonID = Integer.parseInt(urlPath[3]);
+            dayID = Integer.parseInt(urlPath[5]);
+            skierID = Integer.parseInt(urlPath[7]);
         } catch (NumberFormatException e) {
+            return false;
+        }
+        if(seasonID != 2019 || dayID > 366  || dayID < 1){
             return false;
         }
         return true;
