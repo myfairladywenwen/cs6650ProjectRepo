@@ -20,20 +20,17 @@ public class A2Servlet extends HttpServlet {
     private static final String DELIMITER = " ";
     private static final String EXCHANGE_NAME = "liftride_records";
     private final static String QUEUE_NAME = "skiersPost";
-//    private ObjectPool<Channel> channelPool;
+    private ObjectPool<Channel> channelPool;
 
 //    @Override
-//    public void init(){
-        /*
+    public void init(){
         // Create a channel pool
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMinIdle(2);
         config.setMaxIdle(5);
         config.setMaxTotal(20);
         channelPool = new GenericObjectPool<>(new ChannelFactory());
-        */
-
-//    }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -104,7 +101,7 @@ public class A2Servlet extends HttpServlet {
             int dayID = Integer.parseInt(urlParts[5]);
             int skierID = Integer.parseInt(urlParts[7]);
 
-            //TODO: how to process requst body?
+            //TODO: how to process request body?
             // Process request body, convert it into String
             BufferedReader reqBuffer = req.getReader();
             StringBuilder reqStringBuilder = new StringBuilder();
@@ -115,6 +112,7 @@ public class A2Servlet extends HttpServlet {
             String jsonString = reqStringBuilder.toString();
             String message = jsonString + (DELIMITER + resortID + DELIMITER + seasonID + DELIMITER + dayID + DELIMITER + skierID);
 
+            /*
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost("localhost");
             try (Connection connection = factory.newConnection();
@@ -126,29 +124,30 @@ public class A2Servlet extends HttpServlet {
             } catch (TimeoutException e) {
                 throw new RuntimeException(e);
             }
+             */
 
 
             // Publish request message to RabbitMQ
-//            Channel channel = null;
-//            try {
-//                channel = channelPool.borrowObject();
-//                channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
-//                channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes(StandardCharsets.UTF_8));
-//            } catch (IOException e) {
-//                throw e;
-//            } catch (Exception e) {
-//                throw new RuntimeException("Unable to borrow channel from pool" + e.toString());
-//            } finally {
-//                try {
-//                    if (null != channel) {
-//                        channelPool.returnObject(channel);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            Channel channel = null;
+            try {
+                channel = channelPool.borrowObject();
+                channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+                channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes(StandardCharsets.UTF_8));
+                System.out.println(" [x] Sent '" + message + "'");
+            } catch (IOException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to borrow channel from pool" + e.toString());
+            } finally {
+                try {
+                    if (null != channel) {
+                        channelPool.returnObject(channel);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             res.setStatus(HttpServletResponse.SC_CREATED);
-            System.out.println("server side");
         }
     }
 
