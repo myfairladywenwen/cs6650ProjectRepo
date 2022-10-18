@@ -17,7 +17,7 @@ public class A2Recv {
     private static final String EXCHANGE_NAME = "liftride_records";
     private static final String DELIMITER = " ";
     private static final int THREAD_POOL_SIZE = 10;
-    private static ConcurrentHashMap<Integer, List<Integer>> map = new ConcurrentHashMap();
+    private static ConcurrentHashMap<Integer, List<Message>> map = new ConcurrentHashMap();//skierId->["time: 40 liftId: 50" , "..."]
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -39,7 +39,7 @@ public class A2Recv {
                         String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
                         System.out.println(" [x] Received '" + message + "'");
                         try {
-                            storeToMap(message);
+                            storeEventToMap(message);
                         } finally {
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                         }
@@ -58,16 +58,20 @@ public class A2Recv {
         }
     }
 
-    private static void storeToMap(String message) {
-        //TODO: get info from json instead of url
+    //[x] Received '{"time":137,"liftID":15} 4 2022 1 60029'
+    private static void storeEventToMap(String message) {
         // Deserialize message
         String[] messageParts = message.split(DELIMITER);
-        String jsonString = messageParts[0];
+        String body = messageParts[0];
+
+        int time = Integer.parseInt(body.substring(8,body.indexOf(',')));
+        int liftID = Integer.parseInt(body.substring(body.indexOf(',')+10, body.length()-1));
         int resortID = Integer.parseInt(messageParts[1]);
-        int seasonID = Integer.parseInt(messageParts[3]);
-        int dayID = Integer.parseInt(messageParts[5]);
-        int skierID = Integer.parseInt(messageParts[7]);
+        int seasonID = Integer.parseInt(messageParts[2]);
+        int dayID = Integer.parseInt(messageParts[3]);
+        int skierID = Integer.parseInt(messageParts[4]);
+        Message event = new Message(time,liftID,resortID,seasonID,dayID,skierID);
         map.putIfAbsent(skierID, new ArrayList<>());
-        //map.get(skierID).add(liftID);
+        map.get(skierID).add(event);
     }
 }
