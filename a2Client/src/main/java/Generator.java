@@ -21,7 +21,7 @@ public class Generator implements Runnable{
         generateMyLiftRide();
     }
     private void generateMyLiftRide(){
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 200000; i++){
             Integer skierID = random.nextInt(100000) + 1;
             Integer resortID = random.nextInt(10) + 1;
             Integer liftID = random.nextInt(40) + 1;

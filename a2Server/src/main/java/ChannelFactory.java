@@ -12,10 +12,10 @@ public class ChannelFactory extends BasePooledObjectFactory<Channel> {
     private static Connection connection;
     static {
         ConnectionFactory factory = new ConnectionFactory();
-        //factory.setHost("localhost");
-        factory.setHost("54.213.106.168");
-        factory.setUsername("admin");
-        factory.setPassword("password");
+        factory.setHost("localhost");
+//        factory.setHost("54.213.106.168");
+//        factory.setUsername("admin");
+//        factory.setPassword("password");
         try {
             connection = factory.newConnection();
         } catch (IOException | TimeoutException e) {

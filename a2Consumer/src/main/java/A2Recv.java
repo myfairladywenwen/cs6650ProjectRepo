@@ -16,15 +16,15 @@ public class A2Recv {
     private final static String QUEUE_NAME = "skiersPost";
     private static final String EXCHANGE_NAME = "liftride_records";
     private static final String DELIMITER = " ";
-    private static final int THREAD_POOL_SIZE = 10;
+    private static final int THREAD_POOL_SIZE = 168;
     private static ConcurrentHashMap<Integer, List<Message>> map = new ConcurrentHashMap();//skierId->["time: 40 liftId: 50" , "..."]
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
-//        factory.setHost("localhost");
-        factory.setHost("54.213.106.168");
-        factory.setUsername("admin");
-        factory.setPassword("password");
+        factory.setHost("localhost");
+//        factory.setHost("54.213.106.168");
+//        factory.setUsername("admin");
+//        factory.setPassword("password");
         Connection connection = factory.newConnection();
 
         Runnable liftRideConsumer = () -> {
@@ -36,11 +36,11 @@ public class A2Recv {
                     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
                     //not to give more than one message to a worker at a time
                     channel.basicQos(1);
-                    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+                    //System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
                     DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                         String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-                        System.out.println(" [x] Received '" + message + "'");
+                        //System.out.println(" [x] Received '" + message + "'");
                         try {
                             storeEventToMap(message);
                         } finally {
