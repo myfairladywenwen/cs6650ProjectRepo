@@ -76,6 +76,7 @@ public class A2Servlet extends HttpServlet {
             res.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
             res.setStatus(HttpServletResponse.SC_CREATED);
+            System.out.println("status code is: " + res.getStatus());
             int resortID = Integer.parseInt(urlParts[1]);
             int seasonID = Integer.parseInt(urlParts[3]);
             int dayID = Integer.parseInt(urlParts[5]);

@@ -21,7 +21,10 @@ public class A2Recv {
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+//        factory.setHost("localhost");
+        factory.setHost("54.213.106.168");
+        factory.setUsername("admin");
+        factory.setPassword("password");
         Connection connection = factory.newConnection();
 
         Runnable liftRideConsumer = () -> {
