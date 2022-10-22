@@ -35,6 +35,12 @@ public class MultiThreadClient2 {
         ExecutorService producerPool = Executors.newFixedThreadPool(maxThreads);
         CountDownLatch firstCountDown = new CountDownLatch(1);
         CountDownLatch endCountDown = new CountDownLatch(totalRequest);
+
+//        for (int i = 0; i < 10; i++)
+//        {
+//            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, basePath) ;
+//            producerPool.execute(poster);
+//        }
         for (int i = 0; i < 32; i++)
         {
             Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, basePath) ;

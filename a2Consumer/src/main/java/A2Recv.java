@@ -16,15 +16,16 @@ public class A2Recv {
     private final static String QUEUE_NAME = "skiersPost";
     private static final String EXCHANGE_NAME = "liftride_records";
     private static final String DELIMITER = " ";
-    private static final int THREAD_POOL_SIZE = 168;
+//    private static final int THREAD_POOL_SIZE = 168;
+    private static final int THREAD_POOL_SIZE = 50;
     private static ConcurrentHashMap<Integer, List<Message>> map = new ConcurrentHashMap();//skierId->["time: 40 liftId: 50" , "..."]
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-//        factory.setHost("54.213.106.168");
-//        factory.setUsername("admin");
-//        factory.setPassword("password");
+        //factory.setHost("localhost");
+        factory.setHost("35.86.102.252");
+        factory.setUsername("admin");
+        factory.setPassword("password");
         Connection connection = factory.newConnection();
 
         Runnable liftRideConsumer = () -> {

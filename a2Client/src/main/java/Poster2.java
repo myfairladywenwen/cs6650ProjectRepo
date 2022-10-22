@@ -19,6 +19,7 @@ public class Poster2 implements Runnable{
     private Counter failCounter;
     private String basePath;
     private static final int REQUEST_PER_THREAD= 1000;
+    //private static final int REQUEST_PER_THREAD= 10;
 
     public Poster2(MultiThreadClient2 client, LinkedBlockingQueue<MyLiftRide> eventQueue, CountDownLatch firstCountDown, CountDownLatch endCountDown,
                    Counter successCounter, Counter failCounter, String basePath){
