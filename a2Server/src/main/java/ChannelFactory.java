@@ -13,7 +13,7 @@ public class ChannelFactory extends BasePooledObjectFactory<Channel> {
     static {
         ConnectionFactory factory = new ConnectionFactory();
         //factory.setHost("localhost");
-        factory.setHost("35.86.102.252");
+        factory.setHost("34.220.115.246");
         factory.setUsername("admin");
         factory.setPassword("password");
         try {

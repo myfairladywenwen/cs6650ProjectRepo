@@ -97,11 +97,11 @@ public class A2Servlet extends HttpServlet {
                 channel = channelPool.borrowObject();
                 channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
                 channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes(StandardCharsets.UTF_8));
-                System.out.println(" [x] Sent '" + message + "'");
+                //System.out.println(" [x] Sent '" + message + "'");
             } catch (IOException e) {
                 throw e;
             } catch (Exception e) {
-                System.out.println("error. can't borrow channel from pool");
+                //System.out.println("error. can't borrow channel from pool");
                 throw new RuntimeException("Unable to borrow channel from pool" + e.toString());
             } finally {
                 try {
