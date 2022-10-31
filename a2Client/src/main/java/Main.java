@@ -9,7 +9,7 @@ public class Main {
     //private static String basePath = "http://localhost:8080/a2Server_war_exploded/";
 
     //single server ec2
-    //private static String basePath = "http://35.91.249.217:8080/a2Server_war/";
+    //private static String basePath = "http://35.90.127.87:8080/a2Server_war/";
 
     //load balancer
     private static String basePath = "http://serveralb-1053142013.us-west-2.elb.amazonaws.com:8080/a2Server_war/";

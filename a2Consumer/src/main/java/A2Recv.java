@@ -23,7 +23,8 @@ public class A2Recv {
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         //factory.setHost("localhost");
-        factory.setHost("34.220.115.246");
+        //factory.setHost("44.232.7.90");//elasticIP
+        factory.setHost("35.88.135.218");
         factory.setUsername("admin");
         factory.setPassword("password");
         Connection connection = factory.newConnection();

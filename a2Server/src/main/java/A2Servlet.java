@@ -1,5 +1,7 @@
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -11,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeoutException;
 
 @WebServlet(name = "A2Servlet", value = "/A2Servlet")
 public class A2Servlet extends HttpServlet {
@@ -18,15 +21,34 @@ public class A2Servlet extends HttpServlet {
     private static final String EXCHANGE_NAME = "liftride_records";
     private final static String QUEUE_NAME = "skiersPost";
     private ObjectPool<Channel> channelPool;
-
+    private RMQChannelPool channelPool1;
+    private static Connection connection;
     @Override
     public void init(){
         // Create a channel pool
+
+        /*
         GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         config.setMinIdle(2);
         config.setMaxIdle(5);
         config.setMaxTotal(20);
         channelPool = new GenericObjectPool<>(new ChannelFactory());
+        */
+
+
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("35.88.135.218");
+        factory.setUsername("admin");
+        factory.setPassword("password");
+        //factory.setHost("localhost");
+        try {
+            connection = factory.newConnection();
+        } catch (IOException | TimeoutException e) {
+            System.out.println("error while trying to new a connection");
+            e.printStackTrace();
+        }
+        channelPool1 = new RMQChannelPool(20, new RMQChannelFactory(connection));
+
     }
 
     @Override
@@ -93,6 +115,8 @@ public class A2Servlet extends HttpServlet {
 
             // Publish request message to RabbitMQ
             Channel channel = null;
+
+            /*
             try {
                 channel = channelPool.borrowObject();
                 channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
@@ -112,6 +136,29 @@ public class A2Servlet extends HttpServlet {
                     e.printStackTrace();
                 }
             }
+             */
+
+
+            try {
+                channel = channelPool1.borrowObject();
+                channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+                channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes(StandardCharsets.UTF_8));
+                //System.out.println(" [x] Sent '" + message + "'");
+            } catch (IOException e) {
+                throw e;
+            } catch (Exception e) {
+                //System.out.println("error. can't borrow channel from pool");
+                throw new RuntimeException("Unable to borrow channel from pool" + e.toString());
+            } finally {
+                try {
+                    if (null != channel) {
+                        channelPool1.returnObject(channel);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             res.setStatus(HttpServletResponse.SC_CREATED);
         }
     }
