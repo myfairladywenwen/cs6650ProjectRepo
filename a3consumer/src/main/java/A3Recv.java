@@ -38,13 +38,14 @@ public class A3Recv {
                     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
                     //not to give more than one message to a worker at a time
                     channel.basicQos(1);
-                    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+                    //System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
                     DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                         String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
                         //System.out.println(" [x] Received '" + message + "'");
                         try {
-                            storeEventToMap(message);
+                            //storeEventToMap(message);
+                            insertToDB(message);
                         } finally {
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                         }
@@ -78,5 +79,20 @@ public class A3Recv {
         Message event = new Message(time,liftID,resortID,seasonID,dayID,skierID);
         map.putIfAbsent(skierID, new ArrayList<>());
         map.get(skierID).add(event);
+    }
+
+    private static void insertToDB(String message){
+        // Deserialize message
+        String[] messageParts = message.split(DELIMITER);
+        String body = messageParts[0];
+
+        int time = Integer.parseInt(body.substring(8,body.indexOf(',')));
+        int liftID = Integer.parseInt(body.substring(body.indexOf(',')+10, body.length()-1));
+        int resortID = Integer.parseInt(messageParts[1]);
+        int seasonID = Integer.parseInt(messageParts[2]);
+        int dayID = Integer.parseInt(messageParts[3]);
+        int skierID = Integer.parseInt(messageParts[4]);
+        LiftRideDao liftRideDao = new LiftRideDao();
+        liftRideDao.createLiftRide(new LiftRide(skierID, resortID, seasonID, dayID, time, liftID));
     }
 }
