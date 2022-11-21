@@ -22,11 +22,11 @@ public class A3Recv {
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        //factory.setHost("44.232.7.90");//elasticIP
-//        factory.setHost("52.12.34.114");
-//        factory.setUsername("admin");
-//        factory.setPassword("password");
+//        factory.setHost("localhost");
+        factory.setHost("44.232.7.90");//elasticIP for rmq
+        //factory.setHost("52.12.49.247");
+        factory.setUsername("admin");
+        factory.setPassword("password");
         Connection connection = factory.newConnection();
 
         Runnable liftRideConsumer = () -> {
@@ -38,11 +38,11 @@ public class A3Recv {
                     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
                     //not to give more than one message to a worker at a time
                     channel.basicQos(1);
-                    //System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+                    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
                     DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                         String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-                        //System.out.println(" [x] Received '" + message + "'");
+                        System.out.println(" [x] Received '" + message + "'");
                         try {
                             //storeEventToMap(message);
                             insertToDB(message);

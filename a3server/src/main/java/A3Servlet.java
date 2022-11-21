@@ -37,10 +37,11 @@ public class A3Servlet extends HttpServlet {
 
 
         ConnectionFactory factory = new ConnectionFactory();
-//        factory.setHost("52.12.34.114");
-//        factory.setUsername("admin");
-//        factory.setPassword("password");
-        factory.setHost("localhost");
+//        factory.setHost("52.12.49.247");
+        factory.setHost("44.232.7.90");//elasticIP for rmq
+        factory.setUsername("admin");
+        factory.setPassword("password");
+//        factory.setHost("localhost");
         try {
             connection = factory.newConnection();
         } catch (IOException | TimeoutException e) {

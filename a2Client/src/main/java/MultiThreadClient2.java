@@ -46,11 +46,11 @@ public class MultiThreadClient2 {
             Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, basePath) ;
             producerPool.execute(poster);
         }
-        for (int i = 0; i < 168; i++)
-        {
-            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, basePath) ;
-            producerPool.execute(poster);
-        }
+//        for (int i = 0; i < 168; i++)
+//        {
+//            Poster2 poster = new Poster2(this, eventQueue, firstCountDown, endCountDown, successCounter, failCounter, basePath) ;
+//            producerPool.execute(poster);
+//        }
 
         endCountDown.await();
         producerPool.shutdown();
